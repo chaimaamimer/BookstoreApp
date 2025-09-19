@@ -1,4 +1,5 @@
 import 'package:bazar_app/home_page.dart';
+import 'package:bazar_app/main_page.dart';
 import 'package:bazar_app/signIn_signUp/auth_service.dart';
 import 'package:bazar_app/signIn_signUp/signIn_page.dart';
 import 'package:bazar_app/theme/app_colors.dart';
@@ -34,11 +35,10 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   @override
-
   //register button pressed
   void signUp() async {
   final email = emailController.text;
-  final password = passwordController.text;
+  final password = _passwordController.text; 
 
   try {
     final response = await authService.signUpWithPassword(
@@ -49,7 +49,7 @@ class _SignupPageState extends State<SignupPage> {
     if (mounted) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const HomePage()),
+        MaterialPageRoute(builder: (context) => const MainPage()),
       );
     }
   } catch (e) {
@@ -160,6 +160,7 @@ class _SignupPageState extends State<SignupPage> {
                       fontWeight: FontWeight.bold,
                       fontSize: 14)),
               TextField(
+                controller: emailController,
                 decoration: InputDecoration(
                   hintText: "Your email",
                   hintStyle: TextStyle(

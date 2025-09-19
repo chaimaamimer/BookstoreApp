@@ -1,3 +1,5 @@
+import 'package:bazar_app/home_page.dart';
+import 'package:bazar_app/main_page.dart';
 import 'package:bazar_app/onboardings/onboarding3.dart';
 import 'package:bazar_app/signIn_signUp/signIn_page.dart';
 import 'package:flutter/material.dart';
@@ -40,10 +42,19 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
 
     Timer(const Duration(seconds: 3), () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const OnBoarding2()),
-      );
+      final session = Supabase.instance.client.auth.currentSession;
+
+      if (session != null) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const MainPage()),
+        );
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const OnBoarding2()),
+        );
+      }
     });
   }
 

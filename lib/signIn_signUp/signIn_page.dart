@@ -1,6 +1,6 @@
-import 'dart:math';
 
 import 'package:bazar_app/home_page.dart';
+import 'package:bazar_app/main_page.dart';
 import 'package:bazar_app/signIn_signUp/auth_service.dart';
 import 'package:bazar_app/signIn_signUp/signup_page.dart';
 import 'package:bazar_app/theme/app_colors.dart';
@@ -149,35 +149,58 @@ class _SigninPageState extends State<SigninPage> {
               ),
               const SizedBox(height:10),
               //login button
-              Center(
-                child: SizedBox(
-                  width: 327,
-                  height: 48,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => const HomePage()),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primary[500],
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(48),
-                      ),
-                    ),
-                    child: const Text(
-                      'Login',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontFamily: 'OpenSans',
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+Center(
+  child: SizedBox(
+    width: 327,
+    height: 48,
+    child: ElevatedButton(
+      onPressed: () async {
+        final email = emailController.text.trim();
+        final password = passwordController.text.trim();
+        if (email.isEmpty || password.isEmpty) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Please fill in all fields")),
+          );
+          return;
+        }
+        try {
+          await authService.signInWithPassword(
+            email: email,
+            password: password,
+          );
+          if (mounted) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const MainPage()),
+            );
+          }
+        } catch (e) {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text("Error: $e")),
+            );
+          }
+        }
+      },
+      style: ElevatedButton.styleFrom(
+        backgroundColor: AppColors.primary[500],
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(48),
+        ),
+      ),
+      child: const Text(
+        'Login',
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 16,
+          fontFamily: 'OpenSans',
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+    ),
+  ),
+),
+
             const SizedBox(height:10),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
